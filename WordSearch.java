@@ -9,6 +9,11 @@ public class WordSearch{
      */
     public WordSearch(int rows,int cols){
       data = new char[rows][cols];
+      for (int i = 0; i < data.length; ++i){
+        for (int x = 0; x < data[i].length; ++x){
+          data[i][x] = '_';
+        }
+      }
     }
 
     /**Set all values in the WordSearch to underscores'_'*/

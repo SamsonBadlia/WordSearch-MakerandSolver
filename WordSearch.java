@@ -23,15 +23,50 @@ public class WordSearch{
      *@param row is the starting height of the WordSearch
      *@param col is the starting width of the WordSearch
      */
-    public WordSearch(int rows,int cols){
+    public WordSearch(int rows,int cols, String fileName){
       if (rows < 0 || cols < 0){
         throw new IllegalArgumentException("Rows/Columns cannot be negative");
       }
+      wordsToAdd = new ArrayList();
+      wordsAdded = new ArrayList();
       data = new char[rows][cols];
-      for (int i = 0; i < data.length; ++i){
-        for (int x = 0; x < data[i].length; ++x){
-          data[i][x] = '_';
+      clear();
+      randgen = new Random();
+      seed = randgen.nextInt();
+      try {
+        File f = new File(fileName);
+        Scanner s = new Scanner(f);
+        while (s.hasNext()) {
+          String str = s.nextLine().toUpperCase();
+          wordsToAdd.add(str);
+          wordsAdded.add(str);
         }
+      } catch (FileNotFoundException e ) {
+        System.out.println("File not found: " + fileName);
+        System.exit(1);
+      }
+    }
+
+    public WordSearch( int rows, int cols, String fileName, int randSeed){
+      if (rows < 0 || cols < 0){
+        throw new IllegalArgumentException("Rows/Columns cannot be negative");
+      }
+      wordsToAdd = new ArrayList();
+      wordsAdded = new ArrayList();
+      data = new char[rows][cols];
+      clear();
+      randgen = new Random(randSeed);
+      try {
+        File f = new File(fileName);
+        Scanner s = new Scanner(f);
+        while (s.hasNext()) {
+          String str = s.nextLine().toUpperCase();
+          wordsToAdd.add(str);
+          wordsAdded.add(str);
+        }
+      } catch (FileNotFoundException e ) {
+        System.out.println("File not found: " + fileName);
+        System.exit(1);
       }
     }
 
@@ -62,6 +97,9 @@ public class WordSearch{
     }
 
     public boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement){
+      if (rowIncrement == 0 || colIncrement == 0 || rowIncrement < -1 || colIncrement < -1 || rowIncrement > 1 || colIncrement > 1){
+        return false;
+      }
       for (int i = 0; i < word.length(); ++i){
         if (data[row][col] == word.charAt(i) || data[row][col] == '_'){
           data[row][col] = word.charAt(i);

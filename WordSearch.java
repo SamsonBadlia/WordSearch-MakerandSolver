@@ -23,7 +23,7 @@ public class WordSearch{
      *@param row is the starting height of the WordSearch
      *@param col is the starting width of the WordSearch
      */
-    public WordSearch(int rows,int cols, String fileName){
+    public WordSearch(int rows,int cols, String fileName) throws FileNotFoundException {
       if (rows < 0 || cols < 0){
         throw new IllegalArgumentException("Rows/Columns cannot be negative");
       }
@@ -33,21 +33,15 @@ public class WordSearch{
       clear();
       randgen = new Random();
       seed = randgen.nextInt();
-      try {
         File f = new File(fileName);
         Scanner s = new Scanner(f);
         while (s.hasNext()) {
           String str = s.nextLine().toUpperCase();
           wordsToAdd.add(str);
-          wordsAdded.add(str);
         }
-      } catch (FileNotFoundException e ) {
-        System.out.println("File not found: " + fileName);
-        System.exit(1);
-      }
     }
 
-    public WordSearch( int rows, int cols, String fileName, int randSeed){
+    public WordSearch( int rows, int cols, String fileName, int randSeed) throws FileNotFoundException {
       if (rows < 0 || cols < 0){
         throw new IllegalArgumentException("Rows/Columns cannot be negative");
       }
@@ -56,18 +50,12 @@ public class WordSearch{
       data = new char[rows][cols];
       clear();
       randgen = new Random(randSeed);
-      try {
         File f = new File(fileName);
         Scanner s = new Scanner(f);
         while (s.hasNext()) {
           String str = s.nextLine().toUpperCase();
           wordsToAdd.add(str);
-          wordsAdded.add(str);
         }
-      } catch (FileNotFoundException e ) {
-        System.out.println("File not found: " + fileName);
-        System.exit(1);
-      }
     }
 
     /**Set all values in the WordSearch to underscores'_'*/
@@ -111,6 +99,13 @@ public class WordSearch{
         }
       }
       return true;
+    }
+
+    private void addAllWords(String fileName) throws FileNotFoundException {
+      int rowIncrement = randgen.nextInt()%2;
+      int colIncrement = randgen.nextInt()%2;
+      File f = new File(fileName);
+      Scanner s = new Scanner(f);
     }
 
 }

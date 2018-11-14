@@ -27,8 +27,8 @@ public class WordSearch{
       if (rows < 0 || cols < 0){
         throw new IllegalArgumentException("Rows/Columns cannot be negative");
       }
-      wordsToAdd = new ArrayList();
-      wordsAdded = new ArrayList();
+      wordsToAdd = new ArrayList<>();
+      wordsAdded = new ArrayList<>();
       data = new char[rows][cols];
       clear();
       randgen = new Random();
@@ -45,8 +45,8 @@ public class WordSearch{
       if (rows < 0 || cols < 0){
         throw new IllegalArgumentException("Rows/Columns cannot be negative");
       }
-      wordsToAdd = new ArrayList();
-      wordsAdded = new ArrayList();
+      wordsToAdd = new ArrayList<>();
+      wordsAdded = new ArrayList<>();
       data = new char[rows][cols];
       clear();
       randgen = new Random(randSeed);
@@ -85,6 +85,7 @@ public class WordSearch{
     }
 
     public boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement){
+      //Unacceptable values for directions
       if (rowIncrement == 0 || colIncrement == 0 || rowIncrement < -1 || colIncrement < -1 || rowIncrement > 1 || colIncrement > 1){
         return false;
       }
@@ -101,11 +102,22 @@ public class WordSearch{
       return true;
     }
 
-    private void addAllWords(String fileName) throws FileNotFoundException {
-      int rowIncrement = randgen.nextInt()%2;
-      int colIncrement = randgen.nextInt()%2;
+    private void addAllWords(String fileName) throws FileNotFoundException{
+      int tries = 0;
+      int len = wordsToAdd.size();
       File f = new File(fileName);
       Scanner s = new Scanner(f);
+      while (len < 0 ){
+        //random direction
+        int rowIncrement = randgen.nextInt()%2;
+        int colIncrement = randgen.nextInt()%2;
+        int row = randgen.nextInt()%2;
+        int col = randgen.nextInt()%2;
+        if (s.hasNext()){
+          addWord(s.nextLine(), row, col, rowIncrement, colIncrement );
+        }
+        len--;
+      }
     }
 
 }

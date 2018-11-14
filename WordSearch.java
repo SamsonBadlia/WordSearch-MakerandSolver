@@ -23,7 +23,7 @@ public class WordSearch{
      *@param row is the starting height of the WordSearch
      *@param col is the starting width of the WordSearch
      */
-    public WordSearch(int rows,int cols, String fileName) throws FileNotFoundException {
+    public WordSearch(int rows,int cols, String fileName){
       if (rows < 0 || cols < 0){
         throw new IllegalArgumentException("Rows/Columns cannot be negative");
       }
@@ -41,21 +41,29 @@ public class WordSearch{
         }
     }
 
-    public WordSearch( int rows, int cols, String fileName, int randSeed) throws FileNotFoundException {
+    public WordSearch( int rows, int cols, String fileName, int randSeed, boolean answer){
       if (rows < 0 || cols < 0){
         throw new IllegalArgumentException("Rows/Columns cannot be negative");
       }
-      wordsToAdd = new ArrayList<>();
-      wordsAdded = new ArrayList<>();
       data = new char[rows][cols];
       clear();
       randgen = new Random(randSeed);
-        File f = new File(fileName);
-        Scanner s = new Scanner(f);
-        while (s.hasNext()) {
-          String str = s.nextLine().toUpperCase();
-          wordsToAdd.add(str);
+      wordsToAdd = getWords(fileName);
+      addAllWords();
+      if (!answer){
+        fillRandomLetters();
+      }
+    }
+
+    private void fillRandomLetters(){
+      for (int i = 0; i < data.length; ++i){
+        for (int x = 0; x < data[i].length; ++x){
+          int ran = Math.abs(randgen.nextInt()% 27);
+          if (data[i][x] == '_'){
+            data[i][x] = (char)('A' + ran);
+          }
         }
+      }
     }
 
     /**Set all values in the WordSearch to underscores'_'*/

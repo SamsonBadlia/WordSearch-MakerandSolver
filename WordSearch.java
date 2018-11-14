@@ -48,12 +48,18 @@ public class WordSearch{
       data = new char[rows][cols];
       clear();
       randgen = new Random(randSeed);
-      wordsToAdd = getWords(fileName);
-      addAllWords();
+      addAllWords(fileName);
       if (!answer){
         fillRandomLetters();
       }
     }
+
+    private ArrayList<String> getWords(String fileName){
+      File file = new File(fileName);
+      Scanner sc = new Scanner(file);
+        while (sc.hasNextLine())
+          wordsToAdd.add(sc.nextLine());
+      }
 
     private void fillRandomLetters(){
       for (int i = 0; i < data.length; ++i){
@@ -110,23 +116,33 @@ public class WordSearch{
       return true;
     }
 
-    private void addAllWords(String fileName) throws FileNotFoundException{
-      int tries = 0;
+    private void addAllWords(String fileName){
+      wordsToAdd = getWords(fileName);
       int len = wordsToAdd.size();
-      File f = new File(fileName);
-      Scanner s = new Scanner(f);
-      while (len < 0 ){
-        //random direction
+      int size = data.length;
+      int size2 = data[0].length;
+      while (len > 0){
+        int index = Math.abs(randgen.nextInt()%len);
+        String word = wordsToAdd.get(index);
+        int row = Math.abs(randgen.nextInt()%size);
+        int col = Math.abs(randgen.nextInt()%size2);
         int rowIncrement = randgen.nextInt()%2;
         int colIncrement = randgen.nextInt()%2;
-        //random start
-        int row = randgen.nextInt()%2;
-        int col = randgen.nextInt()%2;
-        //checks if there are mroe words
-        if (s.hasNext()){
-          addWord(s.nextLine(), row, col, rowIncrement, colIncrement );
+        int tries = 0;
+        while (tries < (size*size2)){
+          if (!addWord(word, row, col, rowIncrement, colIncrement)){
+            row = Math.abs(randgen.nextInt()%size);
+            col = Math.abs(randgen.nextInt()%size2);
+            rowIncrement = randgen.nextInt()%2;
+            colIncrement = randgen.nextInt()%2;
+            tries++;
+          }
+          else {
+              wordsToAdd.remove(index);
+              len--;
+          }
         }
-        len--;
+
       }
     }
 

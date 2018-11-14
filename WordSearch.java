@@ -111,8 +111,10 @@ public class WordSearch{
         //random direction
         int rowIncrement = randgen.nextInt()%2;
         int colIncrement = randgen.nextInt()%2;
+        //random start
         int row = randgen.nextInt()%2;
         int col = randgen.nextInt()%2;
+        //checks if there are mroe words
         if (s.hasNext()){
           addWord(s.nextLine(), row, col, rowIncrement, colIncrement );
         }

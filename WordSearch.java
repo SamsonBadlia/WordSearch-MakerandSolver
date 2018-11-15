@@ -33,12 +33,17 @@ public class WordSearch{
       clear();
       randgen = new Random();
       seed = randgen.nextInt();
+      try{
         File f = new File(fileName);
         Scanner s = new Scanner(f);
         while (s.hasNext()) {
           String str = s.nextLine().toUpperCase();
           wordsToAdd.add(str);
         }
+      }
+      catch(FileNotFoundException e){
+        System.out.println("Wheres the file: " + fileName);
+      }
     }
 
     public WordSearch( int rows, int cols, String fileName, int randSeed, boolean answer){
@@ -55,10 +60,16 @@ public class WordSearch{
     }
 
     private ArrayList<String> getWords(String fileName){
+      try {
       File file = new File(fileName);
       Scanner sc = new Scanner(file);
         while (sc.hasNextLine())
-          wordsToAdd.add(sc.nextLine());
+          wordsToAdd.add(sc.next());
+        }
+        catch(FileNotFoundException e){
+          System.out.println("Wheres file : " + fileName);
+        }
+        return wordsToAdd;
       }
 
     private void fillRandomLetters(){
@@ -98,23 +109,25 @@ public class WordSearch{
       return s;
     }
 
-    public boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement){
-      //Unacceptable values for directions
+    public boolean addWord(String word, int r, int c, int rowIncrement, int colIncrement){
       if (rowIncrement == 0 || colIncrement == 0 || rowIncrement < -1 || colIncrement < -1 || rowIncrement > 1 || colIncrement > 1){
         return false;
       }
-      for (int i = 0; i < word.length(); ++i){
-        if (data[row][col] == word.charAt(i) || data[row][col] == '_'){
-          data[row][col] = word.charAt(i);
-          row += rowIncrement;
-          col += colIncrement;
-        }
-        else {
-          return false;
-        }
+      if (r < 0 || c < 0){
+        return false;
       }
-      return true;
-    }
+  		for(int i = 0; i < word.length(); i++){
+  			if( data[r][c] == '_' || data[r][c] == word.charAt(i)){
+  				data[r][c] = word.charAt(i);
+  			} else {
+  				return false;
+  			}
+  			r += rowIncrement;
+  			c += colIncrement;
+  		}
+  		wordsAdded.add(word);
+  		return true;
+  	}
 
     private void addAllWords(String fileName){
       wordsToAdd = getWords(fileName);

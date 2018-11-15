@@ -110,13 +110,29 @@ public class WordSearch{
     }
 
     public boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement){
-      //Unacceptable values for directions
-      if (rowIncrement == 0 || colIncrement == 0 || rowIncrement < -1 || colIncrement < -1 || rowIncrement > 1 || colIncrement > 1){
+      if (rowIncrement < -1 || colIncrement < -1 || rowIncrement > 1 || colIncrement > 1){
+        return false;
+      }
+      if (rowIncrement == 0 && colIncrement == 0){
+        return false;
+      }
+      char[][] copy;
+      copy = makeCopy();
+      if (col + (word.length() * colIncrement) > data[0].length){
+        return false;
+      }
+      if (row + (word.length() * rowIncrement) > data.length){
+        return false;
+      }
+      if (col + (word.length() * colIncrement) < 0 ){
+        return false;
+      }
+      if (row + (word.length() * rowIncrement) < 0 ){
         return false;
       }
       for (int i = 0; i < word.length(); ++i){
-        if (data[row][col] == word.charAt(i) || data[row][col] == '_'){
-          data[row][col] = word.charAt(i);
+        if (copy[row][col] == word.charAt(i) || copy[row][col] == '_'){
+          copy[row][col] = word.charAt(i);
           row += rowIncrement;
           col += colIncrement;
         }
@@ -124,8 +140,19 @@ public class WordSearch{
           return false;
         }
       }
+      data = copy;
       return true;
     }
+
+    private char[][] makeCopy(){
+      char[][] copy = new char[data.length][data[0].length];
+      for (int i = 0; i < data.length; ++i){
+        for (int x = 0; x < data[i].length; ++x){
+          copy[i][x] = data[i][x];
+        }
+    }
+    return copy;
+  }
 
     private void addAllWords(String fileName){
       wordsToAdd = getWords(fileName);

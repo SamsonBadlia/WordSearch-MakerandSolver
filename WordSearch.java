@@ -109,25 +109,23 @@ public class WordSearch{
       return s;
     }
 
-    public boolean addWord(String word, int r, int c, int rowIncrement, int colIncrement){
+    public boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement){
+      //Unacceptable values for directions
       if (rowIncrement == 0 || colIncrement == 0 || rowIncrement < -1 || colIncrement < -1 || rowIncrement > 1 || colIncrement > 1){
         return false;
       }
-      if (r < 0 || c < 0){
-        return false;
+      for (int i = 0; i < word.length(); ++i){
+        if (data[row][col] == word.charAt(i) || data[row][col] == '_'){
+          data[row][col] = word.charAt(i);
+          row += rowIncrement;
+          col += colIncrement;
+        }
+        else {
+          return false;
+        }
       }
-  		for(int i = 0; i < word.length(); i++){
-  			if( data[r][c] == '_' || data[r][c] == word.charAt(i)){
-  				data[r][c] = word.charAt(i);
-  			} else {
-  				return false;
-  			}
-  			r += rowIncrement;
-  			c += colIncrement;
-  		}
-  		wordsAdded.add(word);
-  		return true;
-  	}
+      return true;
+    }
 
     private void addAllWords(String fileName){
       wordsToAdd = getWords(fileName);

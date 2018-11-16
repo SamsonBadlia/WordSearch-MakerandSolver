@@ -18,6 +18,19 @@ public class WordSearch{
   private ArrayList<String>wordsAdded;
 
 
+  public static void main(String[] args) {
+    if (args.length < 3){
+      System.out.println("Not enough temrinal inputs");
+    }
+    WordSearch WS = new WordSearch(args[0],args[1],args[2]);
+    for (int i = 0; i < args.length; ++i){
+      if (args[i] == "key"){
+        System.out.println(WS);
+      }
+    }
+    WS.fillRandomLetters();
+    System.out.println(WS);
+  }
     /**Initialize the grid to the size specified
      *and fill all of the positions with '_'
      *@param row is the starting height of the WordSearch
@@ -118,16 +131,16 @@ public class WordSearch{
       }
       char[][] copy;
       copy = makeCopy();
-      if (col + (word.length() * colIncrement) > data[0].length){
+      if (col + 1 + (word.length() * colIncrement) > data[0].length + 1){
         return false;
       }
-      if (row + (word.length() * rowIncrement) > data.length){
+      if (row + 1 + (word.length() * rowIncrement) > data.length + 1){
         return false;
       }
-      if (col + (word.length() * colIncrement) < 0 ){
+      if (col + 1 + (word.length() * colIncrement) < 0 ){
         return false;
       }
-      if (row + (word.length() * rowIncrement) < 0 ){
+      if (row + 1 + (word.length() * rowIncrement) < 0 ){
         return false;
       }
       for (int i = 0; i < word.length(); ++i){
@@ -156,31 +169,25 @@ public class WordSearch{
 
     private void addAllWords(String fileName){
       wordsToAdd = getWords(fileName);
-      int len = wordsToAdd.size();
-      int size = data.length;
-      int size2 = data[0].length;
-      while (len > 0){
-        int index = Math.abs(randgen.nextInt()%len);
-        String word = wordsToAdd.get(index);
-        int row = Math.abs(randgen.nextInt()%size);
-        int col = Math.abs(randgen.nextInt()%size2);
-        int rowIncrement = randgen.nextInt()%2;
-        int colIncrement = randgen.nextInt()%2;
-        int tries = 0;
-        while (tries < (size*size2)){
-          if (!addWord(word, row, col, rowIncrement, colIncrement)){
-            row = Math.abs(randgen.nextInt()%size);
-            col = Math.abs(randgen.nextInt()%size2);
-            rowIncrement = randgen.nextInt()%2;
-            colIncrement = randgen.nextInt()%2;
+      int tries = 0;
+      String randomWord;
+      for (int i = 0; i < wordsToAdd.size(); ++i){
+        randomWord = wordsToAdd.get(randgen.nextInt()%wordsToAdd.size());
+        int r = Math.abs(randgen.nextInt()%data.length);
+        int c = Math.abs(randgen.nextInt()%data[0].length);
+        int rI = Math.abs(randgen.nextInt()%2);
+        int cI = Math.abs(randgen.nextInt()%2);
+        if (tries < 501){
+          if (addWord(randomWord, r , c , rI, cI)){
             tries++;
           }
-          else {
-              wordsToAdd.remove(index);
-              len--;
+        else{
+          r = Math.abs(randgen.nextInt()%data.length);
+          c = Math.abs(randgen.nextInt()%data[0].length);
+          rI = Math.abs(randgen.nextInt()%2);
+          cI = Math.abs(randgen.nextInt()%2);
           }
         }
-
       }
     }
 

@@ -22,15 +22,52 @@ public class WordSearch{
     if (args.length < 3){
       System.out.println("Not enough temrinal inputs");
     }
-    WordSearch WS = new WordSearch(args[0],args[1],args[2]);
-    for (int i = 0; i < args.length; ++i){
-      if (args[i] == "key"){
-        System.out.println(WS);
+    if (args.length == 3){
+      try{
+        int seed = (int)(Math.abs(Math.random()*10000));
+        WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2]);
+        WS.fillRandomLetters();
+        System.out.print(WS);
+      }
+      catch (NumberFormatException e){
+        System.out.println("Something is wrong with the inputs");
+      }
+      catch (IllegalArgumentException f){
+        System.out.println("Bad Value Found");
       }
     }
-    WS.fillRandomLetters();
-    System.out.println(WS);
-  }
+      if (args.length == 4){
+        try{
+          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),false);
+          WS.fillRandomLetters();
+          System.out.print(WS);
+        }
+        catch (NumberFormatException e){
+          System.out.println("Something is wrong with the inputs");
+        }
+        catch (IllegalArgumentException f){
+          System.out.println("Bad Value Found");
+        }
+      }
+        if (args.length > 4){
+          for (int i = 0; i < args.length; ++i){
+            if (args[i] == "key"){
+                try{
+                  WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),true);
+                  WS.fillRandomLetters();
+                  System.out.print(WS);
+                }
+                catch (NumberFormatException e){
+                  System.out.println("Something is wrong with the inputs");
+                }
+                catch (IllegalArgumentException f){
+                  System.out.println("Bad Value Found");
+                }
+          }
+        }
+      }
+    }
+
     /**Initialize the grid to the size specified
      *and fill all of the positions with '_'
      *@param row is the starting height of the WordSearch
@@ -167,28 +204,24 @@ public class WordSearch{
     return copy;
   }
 
-    private void addAllWords(String fileName){
+    public void addAllWords(String fileName){
       wordsToAdd = getWords(fileName);
       int tries = 0;
-      String randomWord;
+      String word;
       for (int i = 0; i < wordsToAdd.size(); ++i){
-        randomWord = wordsToAdd.get(randgen.nextInt()%wordsToAdd.size());
+        word = wordsToAdd.get(i);
         int r = Math.abs(randgen.nextInt()%data.length);
         int c = Math.abs(randgen.nextInt()%data[0].length);
         int rI = Math.abs(randgen.nextInt()%2);
         int cI = Math.abs(randgen.nextInt()%2);
-        if (tries < 501){
-          if (addWord(randomWord, r , c , rI, cI)){
+        while (tries < 500 && addWord(word, r, c, rI, cI) == false){
             tries++;
+            if (addWord(word, r, c, rI, cI)){
+              wordsAdded.add(word);
+              wordsToAdd.remove(i);
+            }
           }
-        else{
-          r = Math.abs(randgen.nextInt()%data.length);
-          c = Math.abs(randgen.nextInt()%data[0].length);
-          rI = Math.abs(randgen.nextInt()%2);
-          cI = Math.abs(randgen.nextInt()%2);
+          wordsToAdd.remove(i);
           }
         }
       }
-    }
-
-}

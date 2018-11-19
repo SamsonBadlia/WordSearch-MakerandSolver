@@ -24,7 +24,7 @@ public class WordSearch{
     }
     if (args.length == 3){
       try{
-        int seed = (int)(Math.abs(Math.random()*10000));
+        int seed = (int)(Math.abs(Math.random()*100000));
         WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2]);
         WS.fillRandomLetters();
         System.out.print(WS);
@@ -54,7 +54,6 @@ public class WordSearch{
             if (args[i] == "key"){
                 try{
                   WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),true);
-                  WS.fillRandomLetters();
                   System.out.print(WS);
                 }
                 catch (NumberFormatException e){
@@ -83,17 +82,7 @@ public class WordSearch{
       clear();
       randgen = new Random();
       seed = randgen.nextInt();
-      try{
-        File f = new File(fileName);
-        Scanner s = new Scanner(f);
-        while (s.hasNext()) {
-          String str = s.nextLine().toUpperCase();
-          wordsToAdd.add(str);
-        }
-      }
-      catch(FileNotFoundException e){
-        System.out.println("Wheres the file: " + fileName);
-      }
+      wordsToAdd = getWords(fileName);
     }
 
     public WordSearch( int rows, int cols, String fileName, int randSeed, boolean answer){
@@ -109,23 +98,26 @@ public class WordSearch{
       }
     }
 
-    private ArrayList<String> getWords(String fileName){
-      try {
-      File file = new File(fileName);
-      Scanner sc = new Scanner(file);
-        while (sc.hasNextLine())
-          wordsToAdd.add(sc.next());
+  private ArrayList<String> getWords(String fileName){
+    ArrayList<String> a = new ArrayList();
+    try{
+    File f = new File(fileName);
+    Scanner s = new Scanner(f);
+  			while(s.hasNextLine()){
+  				String w = s.nextLine().toUpperCase();
+          a.add(w);
+  				}
         }
-        catch(FileNotFoundException e){
-          System.out.println("Wheres file : " + fileName);
+        catch(FileNotFoundException e) {
+          System.out.println("Missing file:" + fileName);
         }
-        return wordsToAdd;
-      }
+          return a;
+			}
 
     private void fillRandomLetters(){
       for (int i = 0; i < data.length; ++i){
         for (int x = 0; x < data[i].length; ++x){
-          int ran = Math.abs(randgen.nextInt()% 27);
+          int ran = Math.abs(randgen.nextInt()% 25);
           if (data[i][x] == '_'){
             data[i][x] = (char)('A' + ran);
           }
@@ -156,6 +148,7 @@ public class WordSearch{
         }
         s+= "|\n";
       }
+      s += "This is your seed:" + seed + " \n" ;
       return s;
     }
 
@@ -206,6 +199,7 @@ public class WordSearch{
 
     public void addAllWords(String fileName){
       wordsToAdd = getWords(fileName);
+      wordsAdded = wordsAdded;
       int tries = 0;
       String word;
       for (int i = 0; i < wordsToAdd.size(); ++i){
@@ -214,14 +208,15 @@ public class WordSearch{
         int c = Math.abs(randgen.nextInt()%data[0].length);
         int rI = Math.abs(randgen.nextInt()%2);
         int cI = Math.abs(randgen.nextInt()%2);
-        while (tries < 500 && addWord(word, r, c, rI, cI) == false){
-            tries++;
+        if (!addWord(word, r, c, rI, cI)){
+          if (tries < 500){
             if (addWord(word, r, c, rI, cI)){
               wordsAdded.add(word);
               wordsToAdd.remove(i);
             }
-          }
-          wordsToAdd.remove(i);
+            tries++;
           }
         }
+        }
       }
+}

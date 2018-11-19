@@ -23,49 +23,26 @@ public class WordSearch{
       System.out.println("Not enough temrinal inputs");
     }
     if (args.length == 3){
-      try{
-        int seed = (int)(Math.abs(Math.random()*100000));
-        WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2]);
+        int seed = (int)(Math.abs(Math.random()*10000));
+        WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],seed, false);
         WS.fillRandomLetters();
         System.out.print(WS);
-      }
-      catch (NumberFormatException e){
-        System.out.println("Something is wrong with the inputs");
-      }
-      catch (IllegalArgumentException f){
-        System.out.println("Bad Value Found");
-      }
     }
       if (args.length == 4){
-        try{
           WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),false);
           WS.fillRandomLetters();
           System.out.print(WS);
         }
-        catch (NumberFormatException e){
-          System.out.println("Something is wrong with the inputs");
-        }
-        catch (IllegalArgumentException f){
-          System.out.println("Bad Value Found");
-        }
-      }
-        if (args.length > 4){
-          for (int i = 0; i < args.length; ++i){
-            if (args[i] == "key"){
-                try{
-                  WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),true);
-                  System.out.print(WS);
-                }
-                catch (NumberFormatException e){
-                  System.out.println("Something is wrong with the inputs");
-                }
-                catch (IllegalArgumentException f){
-                  System.out.println("Bad Value Found");
-                }
+        if (args.length == 5){
+                  WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),false);
+                  if (args[4] == "key"){
+                    WS.displaySolution();
+                    System.out.println(WS);
+                  }
+                  WS.fillRandomLetters();
+                  System.out.println(WS);
+            }
           }
-        }
-      }
-    }
 
     /**Initialize the grid to the size specified
      *and fill all of the positions with '_'
@@ -92,10 +69,8 @@ public class WordSearch{
       data = new char[rows][cols];
       clear();
       randgen = new Random(randSeed);
+      seed = randSeed;
       addAllWords(fileName);
-      if (!answer){
-        fillRandomLetters();
-      }
     }
 
   private ArrayList<String> getWords(String fileName){
@@ -113,6 +88,16 @@ public class WordSearch{
         }
           return a;
 			}
+
+    private void displaySolution(){
+      for (int i = 0; i < data.length; ++i){
+        for (int x = 0; x < data[i].length; ++x){
+          if (data[i][x] == '_'){
+            data[i][x] = ' ';
+          }
+        }
+      }
+    }
 
     private void fillRandomLetters(){
       for (int i = 0; i < data.length; ++i){

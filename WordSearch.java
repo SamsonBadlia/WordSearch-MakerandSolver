@@ -22,7 +22,8 @@ public class WordSearch{
     if (args.length < 3){
       System.out.println("Not enough temrinal inputs");
     }
-    if (args.length == 3){
+    try{
+      if (args.length == 3){
         int seed = (int)(Math.abs(Math.random()*10000));
         WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],seed, false);
         WS.fillRandomLetters();
@@ -43,6 +44,13 @@ public class WordSearch{
                   System.out.println(WS);
             }
           }
+          catch (IllegalArgumentException i){
+            System.out.println("Fix your inputs, they are not valid");
+          }
+          catch (IndexOutOfBoundsException b){
+            System.out.println("Bad index given, fix!");
+          }
+        }
 
     /**Initialize the grid to the size specified
      *and fill all of the positions with '_'
